@@ -8,6 +8,7 @@ import {
   Animated,
   ActivityIndicator,
   Platform,
+  ScrollView,
 } from 'react-native';
 
 interface Ayet {
@@ -22,7 +23,7 @@ const TRANSLATION_ID = 77;
 
 async function rastgeleAyetCek(): Promise<Ayet> {
   const verseUrl =
-    `https://api.quran.com/api/v4/verses/random` +
+    `/api/quran/verses/random` +
     `?translations=${TRANSLATION_ID}` +
     `&fields=text_uthmani,chapter_id,verse_number` +
     `&language=tr`;
@@ -93,49 +94,64 @@ export const QuranWidget: React.FC<{ onPress?: () => void }> = ({ onPress }) => 
   const BG_DARKER = '#16213E';
 
   return (
-    <TouchableOpacity
-      onPress={onPress ?? (() => ayetYukle(true))}
-      activeOpacity={0.92}
-      style={[styles.container, { width: widgetWidth }]}
+    <ScrollView 
+      style={styles.scrollView}
+      contentContainerStyle={styles.scrollContent}
+      showsVerticalScrollIndicator={true}
     >
-      <View style={styles.topBar}>
-        <Text style={[styles.appLabel, { color: GOLD }]}>✦  GÜNÜN AYETİ</Text>
-        {ayet && (
-          <View style={[styles.badge, { backgroundColor: GOLD_FAINT, borderColor: GOLD_MID }]}>
-            <Text style={[styles.badgeText, { color: GOLD }]}>{ayet.kisa}</Text>
+      <TouchableOpacity
+        onPress={onPress ?? (() => ayetYukle(true))}
+        activeOpacity={0.92}
+        style={[styles.container, { width: widgetWidth }]}
+      >
+        <View style={styles.topBar}>
+          <Text style={[styles.appLabel, { color: GOLD }]}>✦  GÜNÜN AYETİ</Text>
+          {ayet && (
+            <View style={[styles.badge, { backgroundColor: GOLD_FAINT, borderColor: GOLD_MID }]}>
+              <Text style={[styles.badgeText, { color: GOLD }]}>{ayet.kisa}</Text>
+            </View>
+          )}
+        </View>
+
+        {yukleniyor ? (
+          <View style={styles.merkez}>
+            <ActivityIndicator color={GOLD} size="small" />
+            <Text style={[styles.yuklemeText, { color: GOLD_MID }]}>Ayet yükleniyor...</Text>
+          </View>
+        ) : hata ? (
+          <View style={styles.merkez}>
+            <Text style={[styles.hataText, { color: '#F09595' }]}>{hata}</Text>
+            <Text style={[styles.yenidenText, { color: GOLD_MID }]}>Tekrar denemek için dokun</Text>
+          </View>
+        ) : ayet ? (
+          <Animated.View style={{ opacity: fadeAnim }}>
+            <Text style={[styles.arabicText, { color: CREAM }]}>{ayet.arabic}</Text>
+            <View style={[styles.divider, { backgroundColor: GOLD_MID }]} />
+            <Text style={[styles.mealText, { color: CREAM_MUTED }]}>{ayet.meal}</Text>
+          </Animated.View>
+        ) : null}
+
+        {ayet && !yukleniyor && (
+          <View style={styles.bottomBar}>
+            <Text style={[styles.refText, { color: GOLD }]}>{ayet.sure} • {ayet.ayet}. Ayet</Text>
+            <Text style={[styles.dokunText, { color: GOLD_MID }]}>↻ yeni ayet için dokun</Text>
           </View>
         )}
-      </View>
-
-      {yukleniyor ? (
-        <View style={styles.merkez}>
-          <ActivityIndicator color={GOLD} size="small" />
-          <Text style={[styles.yuklemeText, { color: GOLD_MID }]}>Ayet yükleniyor...</Text>
-        </View>
-      ) : hata ? (
-        <View style={styles.merkez}>
-          <Text style={[styles.hataText, { color: '#F09595' }]}>{hata}</Text>
-          <Text style={[styles.yenidenText, { color: GOLD_MID }]}>Tekrar denemek için dokun</Text>
-        </View>
-      ) : ayet ? (
-        <Animated.View style={{ opacity: fadeAnim }}>
-          <Text style={[styles.arabicText, { color: CREAM }]}>{ayet.arabic}</Text>
-          <View style={[styles.divider, { backgroundColor: GOLD_MID }]} />
-          <Text style={[styles.mealText, { color: CREAM_MUTED }]}>{ayet.meal}</Text>
-        </Animated.View>
-      ) : null}
-
-      {ayet && !yukleniyor && (
-        <View style={styles.bottomBar}>
-          <Text style={[styles.refText, { color: GOLD }]}>{ayet.sure} • {ayet.ayet}. Ayet</Text>
-          <Text style={[styles.dokunText, { color: GOLD_MID }]}>↻ yeni ayet için dokun</Text>
-        </View>
-      )}
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+    backgroundColor: '#0a0a1a',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingVertical: 20,
+  },
   container: {
     marginHorizontal: 16,
     marginVertical: 8,
