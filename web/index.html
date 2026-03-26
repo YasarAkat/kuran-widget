@@ -5,10 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kuran Widget</title>
     <script>
-      Object.defineProperty(document.body.style, 'overflow', {
-        set: function() {},
-        get: function() { return 'auto'; },
-        configurable: true
+      document.addEventListener('DOMContentLoaded', function() {
+        setInterval(function() {
+          var sheets = document.styleSheets;
+          for (var i = 0; i < sheets.length; i++) {
+            try {
+              var rules = sheets[i].cssRules;
+              for (var j = 0; j < rules.length; j++) {
+                if (rules[j].cssText && rules[j].cssText.includes('overflow:hidden') || 
+                    rules[j].cssText && rules[j].cssText.includes('overflow: hidden')) {
+                  sheets[i].deleteRule(j);
+                }
+              }
+            } catch(e) {}
+          }
+        }, 50);
       });
     </script>
   </head>
