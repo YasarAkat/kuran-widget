@@ -4,24 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kuran Widget</title>
-    <style>
-      html {
-        overflow: auto !important;
-        height: auto !important;
-      }
-      body {
-        overflow: auto !important;
-        height: auto !important;
-        margin: 0;
-        background: #0a0a1a;
-      }
-      #root {
-        overflow: auto !important;
-        height: auto !important;
-      }
-    </style>
+    <script>
+      Object.defineProperty(document.body.style, 'overflow', {
+        set: function() {},
+        get: function() { return 'auto'; },
+        configurable: true
+      });
+    </script>
   </head>
-  <body>
+  <body style="overflow: auto !important; height: auto !important;">
     <div id="root"></div>
   </body>
 </html>
