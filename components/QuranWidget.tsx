@@ -7,7 +7,6 @@ import {
   Dimensions,
   Animated,
   ActivityIndicator,
-  Platform,
 } from 'react-native';
 
 interface Ayet {
@@ -28,7 +27,7 @@ async function rastgeleAyetCek(): Promise<Ayet> {
     `&language=tr`;
 
   const response = await fetch(verseUrl);
-  if (!response.ok) throw new Error('API hatası: ' + response.status);
+  if (!response.ok) throw new Error('API hatasi: ' + response.status);
   const data = await response.json();
   const verse = data.verse;
 
@@ -50,7 +49,7 @@ async function rastgeleAyetCek(): Promise<Ayet> {
     meal: mealMetin,
     sure: sureNameTr,
     ayet: String(verse.verse_number),
-    kisa: `${verse.chapter_id}:${verse.verse_number} • ${sureNameAr}`,
+    kisa: `${verse.chapter_id}:${verse.verse_number} - ${sureNameAr}`,
   };
 }
 
@@ -72,7 +71,7 @@ export const QuranWidget: React.FC<{ onPress?: () => void }> = ({ onPress }) => 
       const yeni = await rastgeleAyetCek();
       setAyet(yeni);
     } catch {
-      setHata('İnternet bağlantısını kontrol et');
+      setHata('Internet baglantisini kontrol et');
     } finally {
       setYukleniyor(false);
       if (animasyon) {
@@ -90,7 +89,6 @@ export const QuranWidget: React.FC<{ onPress?: () => void }> = ({ onPress }) => 
   const GOLD_MID = 'rgba(212,175,55,0.45)';
   const CREAM = '#F5E6C8';
   const CREAM_MUTED = 'rgba(245,230,200,0.8)';
-  const BG_DARKER = '#16213E';
 
   return (
     <View style={styles.pageContainer}>
@@ -100,7 +98,7 @@ export const QuranWidget: React.FC<{ onPress?: () => void }> = ({ onPress }) => 
         style={[styles.container, { width: widgetWidth }]}
       >
         <View style={styles.topBar}>
-          <Text style={[styles.appLabel, { color: GOLD }]}>✦  GÜNÜN AYETİ</Text>
+          <Text style={[styles.appLabel, { color: GOLD }]}>GUNUN AYETI</Text>
           {ayet && (
             <View style={[styles.badge, { backgroundColor: GOLD_FAINT, borderColor: GOLD_MID }]}>
               <Text style={[styles.badgeText, { color: GOLD }]}>{ayet.kisa}</Text>
@@ -111,12 +109,12 @@ export const QuranWidget: React.FC<{ onPress?: () => void }> = ({ onPress }) => 
         {yukleniyor ? (
           <View style={styles.merkez}>
             <ActivityIndicator color={GOLD} size="small" />
-            <Text style={[styles.yuklemeText, { color: GOLD_MID }]}>Ayet yükleniyor...</Text>
+            <Text style={[styles.yuklemeText, { color: GOLD_MID }]}>Ayet yukleniyor...</Text>
           </View>
         ) : hata ? (
           <View style={styles.merkez}>
             <Text style={[styles.hataText, { color: '#F09595' }]}>{hata}</Text>
-            <Text style={[styles.yenidenText, { color: GOLD_MID }]}>Tekrar denemek için dokun</Text>
+            <Text style={[styles.yenidenText, { color: GOLD_MID }]}>Tekrar denemek icin dokun</Text>
           </View>
         ) : ayet ? (
           <Animated.View style={{ opacity: fadeAnim }}>
@@ -128,8 +126,8 @@ export const QuranWidget: React.FC<{ onPress?: () => void }> = ({ onPress }) => 
 
         {ayet && !yukleniyor && (
           <View style={styles.bottomBar}>
-            <Text style={[styles.refText, { color: GOLD }]}>{ayet.sure} • {ayet.ayet}. Ayet</Text>
-            <Text style={[styles.dokunText, { color: GOLD_MID }]}>↻ yeni ayet için dokun</Text>
+            <Text style={[styles.refText, { color: GOLD }]}>{ayet.sure} - {ayet.ayet}. Ayet</Text>
+            <Text style={[styles.dokunText, { color: GOLD_MID }]}>yeni ayet icin dokun</Text>
           </View>
         )}
       </TouchableOpacity>
@@ -141,9 +139,8 @@ const styles = StyleSheet.create({
   pageContainer: {
     flex: 1,
     backgroundColor: '#0a0a1a',
+    alignItems: 'center',
     justifyContent: 'center',
-    overflow: 'scroll',
-    WebkitOverflowScrolling: 'touch',
   },
   container: {
     marginHorizontal: 16,
@@ -153,7 +150,6 @@ const styles = StyleSheet.create({
     padding: 18,
     borderWidth: 1,
     borderColor: 'rgba(212,175,55,0.45)',
-    overflow: 'visible',
     minHeight: 195,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -181,16 +177,13 @@ const styles = StyleSheet.create({
   },
   badgeText: { fontSize: 10, fontWeight: '500' },
   arabicText: {
-    fontFamily: 'System',
     fontSize: 22,
     textAlign: 'right',
     lineHeight: 42,
-    writingDirection: 'rtl',
     marginBottom: 10,
   },
   divider: { height: 1, marginVertical: 8, opacity: 0.6 },
   mealText: {
-    fontFamily: 'System',
     fontSize: 13,
     lineHeight: 20,
     fontStyle: 'italic',
