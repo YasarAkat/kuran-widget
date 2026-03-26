@@ -1,10 +1,4 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "rewrites": [
-    {
-      "source": "/api/quran/(.*)",
-      "destination": "https://api.quran.com/api/v4/$1"
-    }
-  ]
+  "buildCommand": "node -e \"const fs=require('fs');const f='node_modules/expo-router/build/static/html.js';let c=fs.readFileSync(f,'utf8');c=c.replace('body{overflow:hidden}','body{overflow:auto}');fs.writeFileSync(f,c);\" && npx expo export --platform web",
+  "outputDirectory": "dist"
 }
