@@ -8,7 +8,6 @@ import {
   Animated,
   ActivityIndicator,
   Platform,
-  ScrollView,
 } from 'react-native';
 
 interface Ayet {
@@ -94,11 +93,7 @@ export const QuranWidget: React.FC<{ onPress?: () => void }> = ({ onPress }) => 
   const BG_DARKER = '#16213E';
 
   return (
-    <ScrollView 
-      style={styles.scrollView}
-      contentContainerStyle={styles.scrollContent}
-      showsVerticalScrollIndicator={true}
-    >
+    <View style={styles.pageContainer}>
       <TouchableOpacity
         onPress={onPress ?? (() => ayetYukle(true))}
         activeOpacity={0.92}
@@ -138,19 +133,17 @@ export const QuranWidget: React.FC<{ onPress?: () => void }> = ({ onPress }) => 
           </View>
         )}
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
+  pageContainer: {
     flex: 1,
     backgroundColor: '#0a0a1a',
-  },
-  scrollContent: {
-    flexGrow: 1,
     justifyContent: 'center',
-    paddingVertical: 20,
+    overflow: 'scroll',
+    WebkitOverflowScrolling: 'touch',
   },
   container: {
     marginHorizontal: 16,
@@ -160,7 +153,7 @@ const styles = StyleSheet.create({
     padding: 18,
     borderWidth: 1,
     borderColor: 'rgba(212,175,55,0.45)',
-    overflow: 'hidden',
+    overflow: 'visible',
     minHeight: 195,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
