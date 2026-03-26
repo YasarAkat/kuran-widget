@@ -1,4 +1,4 @@
-import { QuranWidget } from '../../components/QuranWidget';
+import { QuranWidget } from '../components/QuranWidget';
 import { View, StyleSheet } from 'react-native';
 
 export default function HomeScreen() {
@@ -12,7 +12,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#0a0a1a',
     paddingTop: 60,
   },
 });
